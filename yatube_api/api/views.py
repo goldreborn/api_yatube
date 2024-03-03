@@ -10,7 +10,6 @@ from posts.models import Post, Group, Comment
 from .serializers import PostSerializer, GroupSerializer, CommentSerializer
 
 
-
 class PostViewSet(ModelViewSet):
 
     queryset = Post.objects.all()
@@ -21,7 +20,6 @@ class PostViewSet(ModelViewSet):
     def perform_create(self, serializer):
 
         serializer.save(author=self.request.user)
-
 
     def update(self, request, *args, **kwargs):
 
@@ -46,13 +44,14 @@ class PostViewSet(ModelViewSet):
 
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
 
         self.perform_update(serializer)
 
         return Response(serializer.data)
-
 
     def destroy(self, request, *args, **kwargs):
 
@@ -65,6 +64,7 @@ class PostViewSet(ModelViewSet):
         self.perform_destroy(instance)
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class GroupViewSet(ModelViewSet):
 
@@ -96,8 +96,9 @@ class CommentViewSet(ModelViewSet):
         post_id = self.kwargs.get('post_id')
         comment_id = self.kwargs.get('comment_id')
 
-        return get_object_or_404(self.get_queryset(), id=comment_id, post_id=post_id)
-    
+        return get_object_or_404(
+            self.get_queryset(), id=comment_id, post_id=post_id
+        )
 
     def retrieve(self, request, *args, **kwargs):
 
@@ -115,7 +116,6 @@ class CommentViewSet(ModelViewSet):
         serializer = self.get_serializer(comment)
 
         return Response(serializer.data)
-
 
     def update(self, request, *args, **kwargs):
 

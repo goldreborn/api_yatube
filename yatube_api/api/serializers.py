@@ -13,7 +13,6 @@ class CommentSerializer(ModelSerializer):
         read_only_fields = ('author', 'post')
 
 
-
 class PostSerializer(ModelSerializer):
 
     author = SlugRelatedField(slug_field='username', read_only=True)
@@ -22,7 +21,7 @@ class PostSerializer(ModelSerializer):
 
         model = Post
         fields = '__all__'
-    
+
 
 class GroupSerializer(ModelSerializer):
 
