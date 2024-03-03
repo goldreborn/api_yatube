@@ -107,7 +107,9 @@ class CommentViewSet(ModelViewSet):
         post_id = kwargs.get('post_id')
         comment_id = kwargs.get('comment_id')
 
-        comment = get_object_or_404(queryset, post_id=post_id, comment_id=comment_id)
+        comment = get_object_or_404(
+            queryset, post_id=post_id, comment_id=comment_id
+        )
 
         if comment.author != request.user:
 
@@ -136,7 +138,9 @@ class CommentViewSet(ModelViewSet):
 
         instance = self.get_object()
 
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True
+        )
         serializer.is_valid(raise_exception=True)
 
         self.perform_update(serializer)
