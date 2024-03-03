@@ -3,12 +3,11 @@ from rest_framework.serializers import (
     ModelSerializer, SlugRelatedField, PrimaryKeyRelatedField
 )
 
-
 from posts.models import Post, Comment, Group
 
 
 class CommentSerializer(ModelSerializer):
-    
+
     post = PrimaryKeyRelatedField(read_only=True)
     author = SlugRelatedField(
         read_only=True, slug_field='username'
