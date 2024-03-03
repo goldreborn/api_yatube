@@ -79,52 +79,27 @@ class GroupViewSet(ModelViewSet):
 
 class CommentViewSet(ModelViewSet):
 
-    queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def list(self, request, *args, **kwargs):
-
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-
-        return Response(serializer.data)
-
-    def get_object(self):
-
+    def get_queryset(self):
         post_id = self.kwargs.get('post_id')
-        comment_id = self.kwargs.get('comment_id')
+        return Comment.objects.filter(post__pk=post_id)
 
-        return get_object_or_404(
-            self.get_queryset(), id=comment_id, post_id=post_id
+    def perform_create(self, serializer):
+
+        serializer.save(
+            author=self.request.user, post=get_object_or_404(
+                Post, id=self.kwargs['post_id']
+            )
         )
-
-    def retrieve(self, request, *args, **kwargs):
-
-        queryset = self.get_queryset()
-
-        post_id = kwargs.get('post_id')
-        comment_id = kwargs.get('comment_id')
-
-        comment = get_object_or_404(
-            queryset, post_id=post_id, comment_id=comment_id
-        )
-
-        if comment.author != request.user:
-
-            return Response(status=status.HTTP_403_FORBIDDEN)
-
-        serializer = self.get_serializer(comment)
-
-        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
 
         instance = self.get_object()
 
-        if instance.author != request.user:
-
+        if instance.author != self.request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         serializer = self.get_serializer(instance, data=request.data)
@@ -134,25 +109,7 @@ class CommentViewSet(ModelViewSet):
 
         return Response(serializer.data)
 
-    def partial_update(self, request, *args, **kwargs):
-
-        instance = self.get_object()
-
-        serializer = self.get_serializer(
-            instance, data=request.data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-
-        self.perform_update(serializer)
-
-        if instance.author != request.user:
-
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        else:
-
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self, request, *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
 
         instance = self.get_object()
 

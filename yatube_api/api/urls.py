@@ -14,7 +14,7 @@ router.register(
     r'posts', PostViewSet, basename='posts'
 )
 router.register(
-    r'posts/(?P<post_id>\d+)/comments(/(?P<comment_id>\d+))?',
+    r'posts/(?P<post_id>\d+)/comments(/(?P<comment_id>\d+)/)?',
     CommentViewSet, basename='comments'
 )
 
