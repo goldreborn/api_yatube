@@ -25,7 +25,7 @@ class PostSerializer(ModelSerializer):
     class Meta:
 
         model = Post
-        fields = ('id', 'author', 'text', 'pub_date', 'group')
+        fields = ('id', 'author', 'text', 'pub_date', 'image', 'group')
 
 
 class GroupSerializer(ModelSerializer):

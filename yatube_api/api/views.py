@@ -22,7 +22,7 @@ class GroupViewSet(ReadOnlyModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [IsAuthenticated, OwnershipPermission]
+    permission_classes = [IsAuthenticated]
 
 
 class CommentViewSet(ModelViewSet):
